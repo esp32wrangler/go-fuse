@@ -75,6 +75,7 @@ const (
 ////////////////////////////////////////////////////////////////
 
 func doInit(server *Server, req *request) {
+	err := os.WriteFile("/tmp/thisisnew", "thisisnew", 0644)
 	input := (*InitIn)(req.inData)
 	if input.Major != _FUSE_KERNEL_VERSION {
 		log.Printf("Major versions does not match. Given %d, want %d\n", input.Major, _FUSE_KERNEL_VERSION)
@@ -90,7 +91,7 @@ func doInit(server *Server, req *request) {
 	server.reqMu.Lock()
 	server.kernelSettings = *input
 	server.kernelSettings.Flags = input.Flags & (CAP_ASYNC_READ | CAP_BIG_WRITES | CAP_FILE_OPS |
-		CAP_READDIRPLUS | CAP_NO_OPEN_SUPPORT | CAP_PARALLEL_DIROPS)
+		CAP_NO_OPEN_SUPPORT | CAP_PARALLEL_DIROPS)
 
 	if server.opts.EnableLocks {
 		server.kernelSettings.Flags |= CAP_FLOCK_LOCKS | CAP_POSIX_LOCKS
