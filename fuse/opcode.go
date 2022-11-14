@@ -75,7 +75,6 @@ const (
 ////////////////////////////////////////////////////////////////
 
 func doInit(server *Server, req *request) {
-	err := os.WriteFile("/tmp/thisisnew", "thisisnew", 0644)
 	input := (*InitIn)(req.inData)
 	if input.Major != _FUSE_KERNEL_VERSION {
 		log.Printf("Major versions does not match. Given %d, want %d\n", input.Major, _FUSE_KERNEL_VERSION)
