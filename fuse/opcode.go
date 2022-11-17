@@ -90,7 +90,7 @@ func doInit(server *Server, req *request) {
 	server.reqMu.Lock()
 	server.kernelSettings = *input
 	server.kernelSettings.Flags = input.Flags & (CAP_ASYNC_READ | CAP_BIG_WRITES | CAP_FILE_OPS |
-		CAP_NO_OPEN_SUPPORT | CAP_PARALLEL_DIROPS)
+		CAP_READDIRPLUS | CAP_NO_OPEN_SUPPORT | CAP_PARALLEL_DIROPS)
 
 	if server.opts.EnableLocks {
 		server.kernelSettings.Flags |= CAP_FLOCK_LOCKS | CAP_POSIX_LOCKS
@@ -102,6 +102,10 @@ func doInit(server *Server, req *request) {
 	if server.opts.SyncRead {
 		// Clear CAP_ASYNC_READ
 		server.kernelSettings.Flags &= ^uint32(CAP_ASYNC_READ)
+	}
+	if server.opts.DisableReadDirPlus {
+		// Clear CAP_READDIRPLUS
+		server.kernelSettings.Flags &= ^uint32(CAP_READDIRPLUS)
 	}
 
 	dataCacheMode := input.Flags & CAP_AUTO_INVAL_DATA
